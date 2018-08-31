@@ -1,0 +1,91 @@
+A. On XAMPP Windows
+(as per instructions here: https://www.youtube.com/watch?v=VL60RCKv7lQ)
+
+1. Install XAMPP and install XDebug using special site
+https://xdebug.org/wizard.php
+and pasting the output of phpinfo() there.
+
+2. Download the binary from step 1 and place it in the appropriate dir.
+
+3. Select php.ini from XAMPP manager program to edit it with notepad.
+
+4. Add the following:
+	(from the xdebug wizard)
+	zend_extension = C:\xampp\php\ext\php_xdebug-2.6.1-7.2-vc15.dll
+	(and from the guy on the vid)
+	xdebug.default_enable=1
+	xdebug.remote_enable=1
+	xdebug.idekey=PHPSTORM
+and check phpinfo() again to CTRL-F for "xdebug" to make sure it installed correctly.
+
+5. In php.ini to stop output buffering and see echo printed immediately:
+	CTRL-F for:
+		implicit_flush and set it to "On"
+		output_buffering and set it to 0 (from 4096)
+	restart apache when done.
+
+6. Install XDebug helper extension and set its key to PHPSTORM
+
+7. Create new project inside XAMPP's htdocs, ex. xampp\htdocs\xampptest.
+
+8. Add to PHPStorm new local interpreter from xampp\php\
+
+9. Edit xampp\apache\conf\extra\httpd-vhosts.conf and add:
+# this entry will list all the hosted subfolders (just for convenience)
+<VirtualHost *:80>
+	DocumentRoot "C:/xampp/htdocs"
+	ServerName myapache.test
+	<Directory "C:/xampp/htdocs">
+		Allow from all
+		Require all granted
+	</Directory>
+</VirtualHost>
+
+# this will provide mappings to the project itself
+<VirtualHost *:80>
+	DocumentRoot "C:/xampp/htdocs/xampptest"
+	ServerName xampp.test
+</VirtualHost>
+
+10. Edit C:\Windows\System32\drivers\etc\hosts and add
+	127.0.0.1 myapache.test xampp.test
+The result from step 9 and 10 is that local apache directory listing is now at
+myapache.test (for convenience) and the site will be at xampp.test.
+
+11A. Debugging using browser plugin (see step 6)
+Settings -> PHP -> Servers -> Add new
+Name "Apache on XAMPP"
+Host "xampp.test"
+Create index.php in the project:
+	<?php
+	for ($i = 0; $i < 10; $i++){
+		echo $i . "<br>";
+	}
+Put a breakpoint on the echo line and press "Start Listening to PHP Debug connections" button.
+Refresh the page in the browser.
+Press F8 to step over each line check how the echoes are presented one-by-one in browser.
+
+11B. Debugging with Webstorm's application settings (Not as good as step 11A).
+From PHPStorm menu Run -> Edit Configurations -> click "+" and select PHP Web Page
+and name this "Debug with application settings".
+Add new server -> name it "Apache on XAMPP" and put url "xampp.test"
+Add "Start URL" -> /xampptest
+Create index.php in the project:
+	<?php
+	for ($i = 0; $i < 10; $i++){
+		echo $i . "<br>";
+	}
+Put a breakpoint on the echo line and press debug button (or Run -> Debug "Debug with application settings").
+Press F8 to step over each line check how the echoes are presented one-by-one in browser.
+
+12. Note: in the debugging console, when the "Use console input" button is on,
+you can type php commands that will be hot-run during the breakpoint, ex. you
+can hot-change a variable like "$i = -11;"
+When it is off, then whatever you type is the STDIN input that will be passed
+to the program (if it is a command-line script).
+
+13. To be able to run php pages using the "browser icons" that pop-up in upper
+right corner of the editor, go Tools -> Deployment -> Configuration and add new:
+Name: "XAMPP in place", Type: In place
+Web server root URL: xampp.test
+Now when clicking on the icons the correct page opens.
