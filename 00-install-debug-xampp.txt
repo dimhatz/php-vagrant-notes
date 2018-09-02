@@ -19,10 +19,13 @@ and pasting the output of phpinfo() there.
 and check phpinfo() again to CTRL-F for "xdebug" to make sure it installed correctly.
 
 5. In php.ini to stop output buffering and see echo printed immediately:
-	CTRL-F for:
-		implicit_flush and set it to "On"
-		output_buffering and set it to 0 (from 4096)
-	restart apache when done.
+CTRL-F for:
+	implicit_flush and set it to "On"
+	output_buffering and set it to 0 (from 4096)
+Also make sure that this line is set like this:
+	zlib.output_compression = Off
+Restart apache when done.
+Also check the php file note on preventing output buffering.
 
 6. Install XDebug helper extension and set its key to PHPSTORM
 

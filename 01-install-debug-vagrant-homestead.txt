@@ -1,0 +1,87 @@
+1. Install Virtualbox, Vagrant, git for windows
+
+2. Add homestead box to vagrant stored boxes:
+	vagrant box add laravel/homestead
+
+3. Install homestead in ~\Homestead\
+
+4. Edit ~\Homestead\Homestead.yaml:
+	memory: 1024
+	folders:
+		- map: ~/PhpstormProjects/homesteadtest
+		  to: /home/vagrant/code/homesteadtest
+
+	sites:
+		- map: homestead.test
+		  to: /home/vagrant/code/homesteadtest/public
+
+	databases:
+		- homesteadtest
+
+5. Create an empty php project in PHPStorm in ~\PhpstormProjects\homesteadtest\
+and create new folder "public" inside. Create new index.php with "phpinfo()" in
+"public" folder.
+
+6. Vagrant up from ~/Homestead check in browser "homestead.test"
+Search for "xdebug" in the web page output to confirm xdebug is already installed.
+Also check which ini's are loaded for it.
+
+7. vagrant ssh and sudo vim /etc/php/7.2/fpm/conf.d/20-xdebug.ini
+(check the correct version and location instead of 7.2 as per phpinfo output)
+By default it should contain:
+	zend_extension=xdebug.so
+	xdebug.remote_enable = 1
+	xdebug.remote_connect_back = 1
+	xdebug.remote_port = 9000
+	xdebug.max_nesting_level = 512
+
+Add (optionally, this will show "IDE key: PHPStorm" in phpinfo, else it would be
+"IDE key: vagrant" -> should not matter):
+	xdebug.idekey=PHPSTORM
+
+Run:
+sudo systemctl restart php7.2-fpm
+
+7A. Optional to prevent output buffering and allow line-by-line output in browser.
+Locate php.ini from phpinfo (here: sudo vim /etc/php/7.2/fpm/php.ini)
+	implicit_flush and set it to "On"
+	output_buffering and set it to 0 (from 4096)
+Also make sure that this line is set like this:
+	zlib.output_compression = Off
+Also check the php file note on preventing output buffering.
+
+8. Install XDebug Helper extension in Chrome and set its "idekey" to "PHPSTORM"
+
+9. PHPStorm Settings -> PHP -> Servers -> Add new
+Name: homestead-server
+Host: homestead.test
+Path mappings: check
+The uppermost project folder (project root) -> /home/vagrant/code/homesteadtest
+This should ensure there are no popups to create new server (and mappings) when
+debugging starts.
+
+9A. Since homestead uses nginx, these are also necessary to stop output
+buffering (and being able to see echo output printed in browser line-by-line
+"in real time").
+In /etc/nginx/nginx.conf these must be set (inside "http {...}" worked, gzip setting was already there):
+	gzip off;
+	fastcgi_buffering off;
+	fastcgi_keep_conn on; # < solution
+	proxy_buffering off;
+Check out the disable-output-buffering.php
+
+10. Change index.php in "public" folder of the project:
+	<?php
+	for ($i = 0; $i < 10; $i++){
+		echo $i . "<br>";
+	}
+and place a breakpoint on the echo line.
+
+11. Run -> Start Listening to PHP Debug connections.
+
+12. Go to homestead.test in browser. Click the XDebug helper's button and enable
+debugging.
+
+13. PHPStorm debugger interface should be triggered. Press F8 to step over the
+lines and watch the echo in the browser appear one-by-one, while stepping over
+the loop (if step 7A was followed).
