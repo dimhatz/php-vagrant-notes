@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="phpnotes.test" id="fd797ab6-7036-4796-b2a6-016931a342b0" name="phpnotes.test on homestead" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/home/vagrant/code/php-notes" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+</project>

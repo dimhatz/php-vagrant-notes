@@ -4,8 +4,17 @@
 	vagrant box add laravel/homestead
 
 3. Install homestead in ~\Homestead\
+	git clone https://github.com/laravel/homestead.git ~/Homestead
+run from git bash:
+	bash init.sh
+Homestead.yaml will be created in ~\Homestead\
+Rename it to Homestead.yaml.orig or delete it.
 
-4. Edit ~\Homestead\Homestead.yaml:
+3A. Create a symlink from ~\Homestead\Homestead.yaml -> my homesteadtest repo's
+Homestead.yaml
+
+4. Opening the symlink ~\Homestead\Homestead.yaml should contain smth like:
+(just a check)
 	memory: 1024
 	folders:
 		- map: ~/PhpstormProjects/homesteadtest
@@ -48,7 +57,8 @@ Locate php.ini from phpinfo (here: sudo vim /etc/php/7.2/fpm/php.ini)
 	output_buffering and set it to 0 (from 4096)
 Also make sure that this line is set like this:
 	zlib.output_compression = Off
-Also check the php file note on preventing output buffering.
+sudo systemctl restart php7.2-fpm
+Also check my php file note on preventing output buffering.
 
 8. Install XDebug Helper extension in Chrome and set its "idekey" to "PHPSTORM"
 
@@ -85,3 +95,13 @@ debugging.
 13. PHPStorm debugger interface should be triggered. Press F8 to step over the
 lines and watch the echo in the browser appear one-by-one, while stepping over
 the loop (if step 7A was followed).
+
+14. Tuning homestead vm:
+cd ~\Homestead\ && vagrant ssh
+sudo systemctl stop postgresql
+sudo systemctl disable postgresql
+sudo systemctl stop blackfire-agent
+sudo systemctl disable blackfire-agent
+
+P.S. everytime something changes in Homestead.yaml (shared folders, mapped
+sites etc) we need to "vagrant reload --provision" so that changes take effect.
