@@ -1,5 +1,8 @@
 To make phpstorm more responsive, go Help -> Edit Custom VM Options.
 The file phpstorm64.exe.vmoptions will open with some defaults.
+References:
+https://www.jetbrains.com/help/idea/tuning-the-ide.html
+https://stackoverflow.com/questions/29388626/how-to-speed-up-webstorm
 Comment them out with # and add:
 
 -Xms1024m
