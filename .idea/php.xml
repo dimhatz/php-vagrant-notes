@@ -2,11 +2,7 @@
 <project version="4">
   <component name="PhpProjectServersManager">
     <servers>
-      <server host="phpnotes.test" id="fd797ab6-7036-4796-b2a6-016931a342b0" name="phpnotes.test on homestead" use_path_mappings="true">
-        <path_mappings>
-          <mapping local-root="$PROJECT_DIR$" remote-root="/home/vagrant/code/php-notes" />
-        </path_mappings>
-      </server>
+      <server host="phpnotes.test" id="09bb9d7c-03ee-4d33-a662-c353d3933ea9" name="Apache on XAMPP" />
     </servers>
   </component>
 </project>
