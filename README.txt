@@ -1,1 +1,1 @@
-These are notes for php.
+Notes for php setup and debugging using vagrant and xampp.
